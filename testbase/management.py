@@ -557,6 +557,7 @@ class RunPlanDistPackage(Command):
 
     parser.add_argument("--disable-run-on-child", help="do not create child process to run", action="store_true")
 
+    parser.add_argument("--index-url", help="pypi index url for pip")
     parser.add_argument("package", help="QTA sdist package")
     parser.add_argument("plan", help="designate a test plan to run")
 

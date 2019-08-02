@@ -238,10 +238,11 @@ class VirtuelEnv(object):
 
     VENV_ENV_NAME = "QTAF_VENV"
 
-    def __init__(self, dist_pkg_path, path=None, recreate=False):
+    def __init__(self, dist_pkg_path, path=None, recreate=False, index_url=None):
         self._dist_pkg_path = dist_pkg_path
         self._venv = path
         self._recreate_venv = recreate
+        self._index_url = index_url
 
     def activate(self):
         """activate virtuelenv on current processs
@@ -284,10 +285,22 @@ class VirtuelEnv(object):
         with open(activation_script) as fd:
             exec(fd.read(), dict(__file__=activation_script))
         if created:
-            subprocess.call(["pip", "install", self._dist_pkg_path], close_fds=True)
+            print("install requires")
+            if not self._index_url:
+                subprocess.call(["pip", "install", self._dist_pkg_path], close_fds=True)
+            else:
+                host = self._index_url.split("/")[2].split(":")[0]
+                cmdline = ["pip", "install", "-i", self._index_url,
+                           "--trusted-host", host, self._dist_pkg_path]
+                print(cmdline)
+                subprocess.call(cmdline, close_fds=True)
+        else:
+            print("skipping requires")
 
         os.environ[self.VENV_ENV_NAME] = "1"
         argv = list(sys.argv)
+        path_list = "\n".join(os.environ["PATH"].split(":"))
+        print(path_list)
         argv[0] = "qta-manage-venv"
         subprocess.call(argv, close_fds=True)
         sys.exit(0)
