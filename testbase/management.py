@@ -697,6 +697,9 @@ class ManagementTools(object):
 def qta_manage_main():
     """qta-manage工具入口
     """
+    cwd = os.getcwd()
+    if cwd not in sys.path:
+        sys.path.insert(0, cwd)
     use_egg = not os.path.isfile(__file__)
     if use_egg:
         cmds = [CreateProject, UpgradeProject, RunTestDistPackage, RunPlanDistPackage, Help]

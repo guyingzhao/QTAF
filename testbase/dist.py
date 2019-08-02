@@ -299,8 +299,6 @@ class VirtuelEnv(object):
 
         os.environ[self.VENV_ENV_NAME] = "1"
         argv = list(sys.argv)
-        path_list = "\n".join(os.environ["PATH"].split(":"))
-        print(path_list)
         argv[0] = "qta-manage-venv"
         subprocess.call(argv, close_fds=True)
         sys.exit(0)
